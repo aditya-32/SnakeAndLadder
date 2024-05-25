@@ -4,6 +4,16 @@
 Snake And Ladder Application performs the Game using Random dice movements
 for Given Number of Players until someone wins
 
+**PROJECT SETUP**
+
+To install correct version of maven and jdk execute below command 
+in root folder
+
+```shell
+sk env install
+```
+
+
 **_Rules_** **_for the Game_**:
 1. Snake always takes you to the cell where its tail is, and has to be a number less than where you are at currently. 
 2. Ladder takes you up (strictly).
