@@ -4,7 +4,6 @@ import lombok.Data;
 import org.example.entity.Ladder;
 import org.example.entity.Player;
 import org.example.entity.Snake;
-
 import java.util.List;
 import java.util.Map;
 

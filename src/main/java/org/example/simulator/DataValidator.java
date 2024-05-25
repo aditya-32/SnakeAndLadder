@@ -8,7 +8,6 @@ import org.example.configuration.AppConfig;
 import org.example.entity.Ladder;
 import org.example.entity.Snake;
 import org.example.exceptions.InvalidGameConfigException;
-
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(onConstructor = @__(@Inject))

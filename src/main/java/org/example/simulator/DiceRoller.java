@@ -9,8 +9,6 @@ import org.example.configuration.AppConfig;
 import org.example.entity.Dice;
 import org.example.entity.Player;
 import org.example.strategy.MovementStrategy;
-
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
