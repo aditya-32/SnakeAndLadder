@@ -1,0 +1,49 @@
+boardSize: 10
+players:
+  - name: Gaurav
+    currentPos: 1
+
+  - name: Sagar
+    currentPos: 1
+
+snakes:
+  - source: 62
+    destination: 5
+  - source: 33
+    destination: 6
+  - source: 49
+    destination: 9
+  - source: 88
+    destination: 16
+  - source: 41
+    destination: 20
+  - source: 56
+    destination: 53
+  - source: 98
+    destination: 64
+  - source: 93
+    destination: 73
+  - source: 95
+    destination: 75
+ladders:
+  - source: 2
+    destination: 37
+  - source: 27
+    destination: 46
+  - source: 10
+    destination: 32
+  - source: 51
+    destination: 68
+  - source: 61
+    destination: 79
+  - source: 65
+    destination: 84
+  - source: 71
+    destination: 91
+  - source: 81
+    destination: 100
+crocodiles: []
+mines: []
+dices: [6, 5]
+diceRolls:
+movementStrategy: min
