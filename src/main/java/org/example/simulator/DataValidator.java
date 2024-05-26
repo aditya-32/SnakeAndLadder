@@ -23,18 +23,18 @@ public class DataValidator {
         }
         var lastCell = appConfig.getBoardSize() * appConfig.getBoardSize();
         for (var snk : snake) {
-            if (snk.getSource() < 0 || snk.getSource() > lastCell) {
+            if (snk.getSource() <= 0 || snk.getSource() > lastCell) {
                 throw new InvalidGameConfigException("Snake can have cells within limit " + 1 + " - "+lastCell);
             }
-            if (snk.getSource() < snk.getDestination()) {
+            if (snk.getSource() <= snk.getDestination()) {
                 throw new InvalidGameConfigException("Snake can only take you to a cell lower than current one");
             }
         }
         for (var ldr : ladders) {
-            if (ldr.getSource() < 0 || ldr.getSource() > lastCell) {
+            if (ldr.getSource() <= 0 || ldr.getSource() > lastCell) {
                 throw new InvalidGameConfigException("Ladder can have cells within limit " + 1 + " - "+lastCell);
             }
-            if (ldr.getSource() > ldr.getDestination()) {
+            if (ldr.getSource() >= ldr.getDestination()) {
                 throw new InvalidGameConfigException("Ladder can only take you to a cell greater than current one");
             }
         }

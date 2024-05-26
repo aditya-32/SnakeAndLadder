@@ -29,6 +29,7 @@ public class GameSimulator {
     private final DataValidator validator;
 
     private Integer winPos;
+    private Integer startPos;
     private Queue<Player> players = new LinkedList<>();
     private Set<Integer> mines;
     private Set<Integer> crocodiles;
@@ -40,6 +41,7 @@ public class GameSimulator {
         validator.validateGameConfig(appConfig);
         Integer boardSize = appConfig.getBoardSize();
         this.winPos = boardSize * boardSize;
+        this.startPos = 1;
         this.players = new LinkedList<>(appConfig.getPlayers());
         this.posToPlayerMap = extractPlayPositionMap(players);
         this.crocodiles = new HashSet<>(appConfig.getCrocodiles());
@@ -58,7 +60,7 @@ public class GameSimulator {
 
     private Map<Integer, Set<Player>> extractPlayPositionMap(Queue<Player> players) {
         var positionMap = new HashMap<Integer, Set<Player>>();
-        for (int i = 1; i <= winPos; i++) {
+        for (int i = startPos; i <= winPos; i++) {
             positionMap.put(i, new HashSet<>());
         }
         for (var player : players) {
@@ -164,7 +166,7 @@ public class GameSimulator {
     }
 
     private void removeExistingPlayer(int pos, Player player) {
-        if (posToPlayerMap.containsKey(pos) && pos != 1) {
+        if (posToPlayerMap.containsKey(pos) && pos != startPos) {
             var exitingPLayers = posToPlayerMap.get(pos);
             for (var ply : exitingPLayers) {
                 if (ply.getId() != player.getId()) {
