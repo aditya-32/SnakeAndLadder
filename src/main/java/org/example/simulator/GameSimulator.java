@@ -3,10 +3,9 @@ package org.example.simulator;
 import jakarta.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.example.cellStrategy.CellSkipperHandler;
 import org.example.configuration.AppConfig;
-import org.example.entity.Ladder;
 import org.example.entity.Player;
-import org.example.entity.Snake;
 import org.example.exceptions.InvalidGameConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +16,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class GameSimulator {
@@ -27,15 +24,12 @@ public class GameSimulator {
     private final AppConfig appConfig;
     private final DiceRoller diceRoller;
     private final DataValidator validator;
+    private final CellSkipperHandler cellSkipperHandler;
 
     private Integer winPos;
     private Integer startPos;
     private Queue<Player> players = new LinkedList<>();
-    private Set<Integer> mines;
-    private Set<Integer> crocodiles;
     private Map<Integer, Set<Player>> posToPlayerMap = new HashMap<>();
-    private Map<Integer, Snake> snakeMap = new HashMap<>();
-    private Map<Integer, Ladder> ladderMap = new HashMap<>();
 
     private void init() throws InvalidGameConfigException {
         validator.validateGameConfig(appConfig);
@@ -44,18 +38,6 @@ public class GameSimulator {
         this.startPos = 1;
         this.players = new LinkedList<>(appConfig.getPlayers());
         this.posToPlayerMap = extractPlayPositionMap(players);
-        this.crocodiles = new HashSet<>(appConfig.getCrocodiles());
-        this.mines = new HashSet<>(appConfig.getMines());
-        var snakes = appConfig.getSnakes();
-        this.snakeMap = snakes.stream().collect(Collectors.toMap(
-                Snake::getSource,
-                Function.identity()
-        ));
-        var ladders = appConfig.getLadders();
-        this.ladderMap = ladders.stream().collect(Collectors.toMap(
-                Ladder::getSource,
-                Function.identity()
-        ));
     }
 
     private Map<Integer, Set<Player>> extractPlayPositionMap(Queue<Player> players) {
@@ -111,47 +93,13 @@ public class GameSimulator {
         }
         removePlayerFromOldPosition(currPos, player);
         var didEncounterObstacle = false;
-        while (isPlayerInDanger(newPos, player)) {
-            if (snakeMap.containsKey(newPos)) {
-                didEncounterObstacle = true;
-                var snake = snakeMap.get(newPos);
-                var updatedPos = snake.getDestination();
-                logger.info("{} rolled a {} and bitten by snake at {} and moved from {} to {}",
-                        player.getName(), stepCount, newPos, newPos, updatedPos);
-                newPos = updatedPos;
-            } else if (ladderMap.containsKey(newPos)) {
-                didEncounterObstacle = true;
-                var ladder = ladderMap.get(newPos);
-                var updatedPos = ladder.getDestination();
-                logger.info("{} rolled a {} and climbed the ladder at {} and moved from {} to {}",
-                        player.getName(), stepCount, newPos, newPos, updatedPos);
-                newPos = updatedPos;
-            } else if (crocodiles.contains(newPos)) {
-                didEncounterObstacle = true;
-                var updatedPos = newPos - 5;
-                logger.info("{} rolled a {} and bitten the crocodile at {} and moved from {} to {}",
-                        player.getName(), stepCount, newPos, newPos, updatedPos);
-                newPos = updatedPos;
-            } else if (mines.contains(newPos)) {
-                didEncounterObstacle = true;
-                player.activateMineMoveBlocker();
-                logger.info("{} rolled a {} and encountered a mine at {} and did not move",
-                        player.getName(), stepCount, newPos);
-            }
-            removeExistingPlayer(newPos, player);
-        }
+        newPos = cellSkipperHandler.getNext(player, newPos);
+        removeExistingPlayer(newPos, player);
         if (!didEncounterObstacle) {
             logger.info("{} rolled a {} and move from {} to {}", player.getName(), stepCount, currPos, newPos);
         }
         adPlayerToNewPosition(newPos, player);
         return newPos;
-    }
-
-    private boolean isPlayerInDanger(int newPos, Player player) {
-        return snakeMap.containsKey(newPos)
-                || ladderMap.containsKey(newPos)
-                || crocodiles.contains(newPos)
-                || (mines.contains(newPos) && player.getMineTracker() != 2);
     }
 
     private void adPlayerToNewPosition(int pos, Player player) {

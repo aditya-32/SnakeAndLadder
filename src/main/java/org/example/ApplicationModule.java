@@ -6,7 +6,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 import lombok.RequiredArgsConstructor;
 import org.example.Enum.MovementStrategyEnum;
+import org.example.cellStrategy.CellSkipperHandler;
 import org.example.configuration.AppConfig;
+import org.example.entity.CellSkipperEntity;
 import org.example.simulator.DataValidator;
 import org.example.simulator.DiceRoller;
 import org.example.simulator.GameSimulator;
@@ -33,6 +35,7 @@ public class ApplicationModule extends AbstractModule {
 
         bind(AppConfig.class).toInstance(appConfig);
         bind(DiceRoller.class).in(SINGLETON);
+        bind(CellSkipperHandler.class).in(SINGLETON);
         bind(GameSimulator.class).in(SINGLETON);
         bind(DataValidator.class).in(SINGLETON);
     }
