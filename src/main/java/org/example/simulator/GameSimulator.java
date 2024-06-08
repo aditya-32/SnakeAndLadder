@@ -91,13 +91,8 @@ public class GameSimulator {
         if (newPos > winPos) {
             return currPos;
         }
-        removePlayerFromOldPosition(currPos, player);
-        var didEncounterObstacle = false;
-        newPos = cellSkipperHandler.getNext(player, newPos);
-        removeExistingPlayer(newPos, player);
-        if (!didEncounterObstacle) {
-            logger.info("{} rolled a {} and move from {} to {}", player.getName(), stepCount, currPos, newPos);
-        }
+        removePlayerFromOldPosition(player);
+        newPos = cellSkipperHandler.getNext(player, currPos, stepCount, this::removeExistingPlayer);
         adPlayerToNewPosition(newPos, player);
         return newPos;
     }
@@ -108,8 +103,8 @@ public class GameSimulator {
         playerList.add(player);
     }
 
-    private void removePlayerFromOldPosition(int pos, Player player) {
-        var playerList = posToPlayerMap.get(pos);
+    private void removePlayerFromOldPosition(Player player) {
+        var playerList = posToPlayerMap.get(player.getCurrentPos());
         playerList.remove(player);
     }
 

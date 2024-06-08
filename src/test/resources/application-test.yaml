@@ -4,43 +4,64 @@ players:
     currentPos: 10
   - name: Sagar
     currentPos: 48
-snakes:
+entities:
   - source: 62
     destination: 5
+    type: snake
   - source: 33
     destination: 6
+    type: snake
   - source: 48
     destination: 9
+    type: snake
   - source: 88
     destination: 16
+    type: snake
   - source: 41
     destination: 20
+    type: snake
   - source: 56
     destination: 53
+    type: snake
   - source: 98
     destination: 64
+    type: snake
   - source: 93
     destination: 73
+    type: snake
   - source: 95
     destination: 75
-ladders:
+    type: snake
   - source: 2
     destination: 37
+    type: ladder
   - source: 27
     destination: 46
+    type: ladder
   - source: 10
     destination: 32
+    type: ladder
   - source: 51
     destination: 68
+    type: ladder
   - source: 61
     destination: 79
+    type: ladder
   - source: 65
     destination: 84
+    type: ladder
   - source: 71
     destination: 91
+    type: ladder
   - source: 81
     destination: 100
-crocodiles: [6, 7]
+    type: ladder
+  - source: 6
+    destination: 1
+    type: crocodile
+  - source: 7
+    destination: 2
+    type: crocodile
 mines: [4]
 dices: [6]
 diceRolls:

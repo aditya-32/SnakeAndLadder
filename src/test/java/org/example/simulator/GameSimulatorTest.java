@@ -2,6 +2,7 @@ package org.example.simulator;
 
 import com.google.inject.Guice;
 import org.example.ApplicationModule;
+import org.example.Enum.SkipperType;
 import org.example.configuration.AppConfig;
 import org.example.configuration.YamlParser;
 import org.example.exceptions.InvalidGameConfigException;
@@ -26,10 +27,14 @@ class GameSimulatorTest {
 
     @Test
     void testGameDataValidity_SnakeAndLadderSameStartPoint() {
-        var snake = appConfig.getSnakes().stream().findFirst();
-        var ladder = appConfig.getLadders().stream().findFirst();
-        if (snake.isPresent() && ladder.isPresent()) {
-            ladder.get().setSource(snake.get().getSource());
+        var snakeOpt = appConfig.getEntities().stream()
+                .filter(entity -> SkipperType.SNAKE.getName().equals(entity.getType()))
+                .findFirst();
+        var ladderOpt = appConfig.getEntities().stream()
+                .filter(entity -> SkipperType.LADDER.getName().equals(entity.getType()))
+                .findFirst();
+        if (snakeOpt.isPresent() && ladderOpt.isPresent()) {
+            ladderOpt.get().setSource(snakeOpt.get().getSource());
         }
         var injector = Guice.createInjector(new ApplicationModule(appConfig));
         simulator = injector.getInstance(GameSimulator.class);
@@ -39,7 +44,9 @@ class GameSimulatorTest {
 
     @Test
     void testGameDataValidity_SnakeValidity() {
-        var snakeOpt = appConfig.getSnakes().stream().findFirst();
+        var snakeOpt = appConfig.getEntities().stream()
+                .filter(entity -> SkipperType.SNAKE.getName().equals(entity.getType()))
+                .findFirst();
         snakeOpt.ifPresent(value -> value.setDestination(value.getSource() + 1));
         var injector = Guice.createInjector(new ApplicationModule(appConfig));
         simulator = injector.getInstance(GameSimulator.class);
@@ -49,7 +56,9 @@ class GameSimulatorTest {
 
     @Test
     void testGameDataValidity_LadderValidity() {
-        var ladderOpt = appConfig.getLadders().stream().findFirst();
+        var ladderOpt = appConfig.getEntities().stream()
+                .filter(entity -> SkipperType.LADDER.getName().equals(entity.getType()))
+                .findFirst();
         ladderOpt.ifPresent(value -> value.setSource(value.getDestination() + 1));
         var injector = Guice.createInjector(new ApplicationModule(appConfig));
         simulator = injector.getInstance(GameSimulator.class);
